@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    <TextView android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:text="Current Location:"/>
+    <TextView android:id="@+id/txtLocation"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="10px"
+              android:text="Locating..."/>
+    <TextView android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="10px"
+              android:text="Map:"/>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_margin="5px"
+    >
+        <ImageView android:id="@+id/imgViewOrg"
+                   android:layout_width="96px"
+                   android:layout_height="96px"/>
+        <ImageView android:id="@+id/imgViewBW"
+                   android:layout_width="96px"
+                   android:layout_height="96px"/>
+    </LinearLayout>
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+               android:layout_width="fill_parent"
+               android:layout_height="wrap_content"
+               android:stretchColumns="1">
+        <TableRow>
+            <Button android:id="@+id/btnStart"
+                    android:layout_width="0px"
+                    android:layout_height="wrap_content"
+                    android:text="Start"
+                    android:layout_weight="0.5"/>
+            <Button android:id="@+id/btnStop"
+                    android:layout_width="0px"
+                    android:layout_height="wrap_content"
+                    android:text="Stop"
+                    android:layout_weight="0.5"/>
+        </TableRow>
+    </TableLayout>
+</LinearLayout>
+
