@@ -160,6 +160,7 @@ public class MainActivity extends Activity
 
     private void sendUpdateMapMessage(int millis)
     {
+        mHandler.removeMessages(1);
         Message msg = new Message();
         msg.what = 1;
         if (millis > 0)
