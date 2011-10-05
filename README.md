@@ -8,6 +8,10 @@ Please install MetaWatch Manager first (requires 0.2.4 or later). The manager co
 
 Open the app on the handset and it'll keep update last known location. Hit start button to start send maps to your watch. Please note that you'll need internet connection the whole time for obtaining Google Maps images.
 
+# Known Bugs
+
+Due to the bug in the MWM 0.2.4 (it send wrong signal to watch for "Stop Application Mode", in fact, it sends the opposite…), you may notice that your watch is not responding even if you hit Stop button. You'll need to Stop and re-Start your MetaWatch Manager to get your watch return to idle mode.
+
 # License
 
  Copyright 2011 Zero, Chien-An Cho
