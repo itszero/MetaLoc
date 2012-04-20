@@ -15,6 +15,15 @@
     <TextView android:layout_width="fill_parent"
               android:layout_height="wrap_content"
               android:layout_marginTop="10px"
+              android:text="Destination (lat,lng):"/>
+    <EditText android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="10px"
+              android:id="@+id/txtDestination"
+              android:singleLine="true"/>
+    <TextView android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="10px"
               android:text="Map:"/>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
