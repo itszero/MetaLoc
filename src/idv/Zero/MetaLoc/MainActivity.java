@@ -13,15 +13,15 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.*;
 
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainActivity extends Activity {
   private LocationManager mLocationManager;
@@ -43,6 +43,24 @@ public class MainActivity extends Activity {
     ((ImageView) findViewById(R.id.imgViewBW)).setImageDrawable(Resources.getSystem().getDrawable(android.R.drawable.ic_menu_compass));
 
     txtDestination = (EditText) findViewById(R.id.txtDestination);
+    // Check if receiving a coordinate from GMaps
+    final Intent intent = getIntent();
+    String action = intent.getAction();
+    String type = intent.getType();
+
+    if (Intent.ACTION_SEND.equals(action) && type != null) {
+      if ("text/plain".equals(type))
+      {
+        new Thread() {
+          @Override
+          public void run()
+          {
+            handleIncomingText(intent);
+          }
+        }.start();
+      }
+    }
+
     btnStart = ((Button) findViewById(R.id.btnStart));
     btnStop = ((Button) findViewById(R.id.btnStop));
     btnStop.setEnabled(false);
@@ -74,6 +92,52 @@ public class MainActivity extends Activity {
     mLocationListener = new MetaLocLocationListener();
     mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 0, mLocationListener);
     mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 0, mLocationListener);
+  }
+
+  private void handleIncomingText(Intent intent)
+  {
+    String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+    if (sharedText == null) return;
+
+    Log.i("MetaLoc", "Received Text: " + sharedText);
+    Pattern ptnShareURL = Pattern.compile("(http:\\/\\/m\\.google\\.com\\.tw\\/u\\/m\\/\\w+)");
+    Matcher matcher = ptnShareURL.matcher(sharedText);
+    if (!matcher.find())
+      return;
+
+    String lurl = matcher.group();
+    Log.i("MetaLoc", "Receiving location share: " + lurl);
+    Toast.makeText(this, "Resolving location share...", Toast.LENGTH_SHORT);
+    try {
+      URL url = new URL(lurl);
+      HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+      conn.setInstanceFollowRedirects(false);
+      conn.connect();
+      String nextURL = conn.getHeaderField("Location");
+
+      Log.i("MetaLoc", "Google's location share is redirecting to: " + nextURL);
+      Pattern ptnCord = Pattern.compile("q=(\\d+.\\d+,\\d+.\\d+)\\(");
+      Matcher matcherCord = ptnCord.matcher(nextURL);
+      if (!matcherCord.find())
+        return;
+
+      final String cord = matcherCord.group(1);
+      Log.i("MetaLoc", "Shared coordinate found: " + cord);
+      txtDestination.post(new Runnable() {
+        @Override
+        public void run() {
+          txtDestination.setText(cord);
+        }
+      });
+    }
+    catch (Exception e) {
+      Toast.makeText(
+        this,
+        String.format("Unable to resolve location share: %s", e.getMessage()),
+        Toast.LENGTH_LONG
+      );
+      e.printStackTrace();
+    }
   }
 
   public class MetaLocLocationListener implements LocationListener {
