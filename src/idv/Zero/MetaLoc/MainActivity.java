@@ -107,7 +107,12 @@ public class MainActivity extends Activity {
 
     String lurl = matcher.group();
     Log.i("MetaLoc", "Receiving location share: " + lurl);
-    Toast.makeText(this, "Resolving location share...", Toast.LENGTH_SHORT);
+    txtDestination.post(new Runnable() {
+      @Override
+      public void run() {
+        Toast.makeText(MainActivity.this, "Resolving location share...", Toast.LENGTH_SHORT).show();
+      }
+    });
     try {
       URL url = new URL(lurl);
       HttpURLConnection conn = (HttpURLConnection)url.openConnection();
@@ -130,12 +135,17 @@ public class MainActivity extends Activity {
         }
       });
     }
-    catch (Exception e) {
-      Toast.makeText(
-        this,
-        String.format("Unable to resolve location share: %s", e.getMessage()),
-        Toast.LENGTH_LONG
-      );
+    catch (final Exception e) {
+      txtDestination.post(new Runnable() {
+        @Override
+        public void run() {
+          Toast.makeText(
+                  MainActivity.this,
+                  String.format("Unable to resolve location share: %s", e.getMessage()),
+                  Toast.LENGTH_LONG
+          ).show();
+        }
+      });
       e.printStackTrace();
     }
   }
